@@ -1,0 +1,62 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.0'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion "29.0.1"
+
+    defaultConfig {
+        applicationId "com.example.native_activity"
+        minSdkVersion 9
+        targetSdkVersion 27
+
+        ndk {
+            moduleName  "native_activity"
+            abiFilters "armeabi-v7a"
+        }
+    }
+
+    externalNativeBuild{
+        ndkBuild{
+            path "cpp/Android.mk"
+        }
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+                java.srcDirs = ['java']
+                resources.srcDirs = ['java']
+                aidl.srcDirs = ['java']
+                renderscript.srcDirs = ['java']
+                res.srcDirs = ['res']
+                assets.srcDirs = ['assets']
+                jni.srcDirs = [] //disable automatic ndk-build call
+                jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}
